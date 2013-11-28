@@ -9,6 +9,8 @@ object Main extends App {
     type rewoP[A <: Nat] <: Nat
     type Mod[A <: Nat] <: Nat
     type dcG[A <: Nat] <: Nat
+
+    type DivideInternal[A <: Nat] <: Nat
   }
 
   trait _0 extends Nat {
@@ -20,19 +22,22 @@ object Main extends App {
     type rewoP[A <: Nat] = _1
     type Mod[A <: Nat] = _0
     type dcG[A <: Nat] = A
+
+    type DivideInternal[A <: Nat] = _0
   }
 
   trait Succ[N <: Nat] extends Nat {
-    type This = Succ[N]
-
     type Prev = N
     type Plus[A <: Nat] = N#Plus[Succ[A]]
     type Times[A <: Nat] = A#Plus[N#Times[A]]
-    type Divide[A <: Nat] = Succ[A#suniM[This]#Divide[A]]
+    type Divide[A <: Nat] = Succ[This]#DivideInternal[A]#Prev
     type suniM[A <: Nat] = N#suniM[A#Prev]
     type rewoP[A <: Nat] = A#Times[N#rewoP[A]]
-    type Mod[A <: Nat] = Succ[This]#Divide[A]#Prev#Times[A]#suniM[This] // not inductive
+    type Mod[A <: Nat] = This#Divide[A]#Times[A]#suniM[This] // not inductive
     type dcG[A <: Nat] = A#Mod[This]#dcG[This]
+
+    type This = Succ[N]
+    type DivideInternal[A <: Nat] = Succ[A#suniM[This]#DivideInternal[A]]
   }
 
   type _1 = Succ[_0]
@@ -48,7 +53,7 @@ object Main extends App {
   type Plus[A <: Nat, B <: Nat] = A#Plus[B]
   type Minus[A <: Nat, B <: Nat] = B#suniM[A]
   type Times[A <: Nat, B <: Nat] = A#Times[B]
-  type Divide[A <: Nat, B <: Nat] = Succ[A]#Divide[B]#Prev
+  type Divide[A <: Nat, B <: Nat] = A#Divide[B]
   type Power[A <: Nat, B <: Nat] = B#rewoP[A]
   type Mod[A <: Nat, B <: Nat] = A#Mod[B]
   type Gcd[A <: Nat, B <: Nat] = B#dcG[A]
@@ -58,6 +63,7 @@ object Main extends App {
   implicitly[_8 =:= Power[_2, _3]]
   implicitly[_3 =:= Minus[_5, _2]]
   implicitly[_2 =:= Divide[_4, _2]]
+  implicitly[_1 =:= Divide[_4, _3]] // integer division
   implicitly[_2 =:= Mod[_8, _3]]
   implicitly[_3 =:= Gcd[_6, _9]]
 
