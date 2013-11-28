@@ -23,14 +23,16 @@ object Main extends App {
   }
 
   trait Succ[N <: Nat] extends Nat {
+    type This = Succ[N]
+
     type Prev = N
     type Plus[A <: Nat] = N#Plus[Succ[A]]
     type Times[A <: Nat] = A#Plus[N#Times[A]]
-    type Divide[A <: Nat] = Succ[A#suniM[Succ[N]]#Divide[A]]
+    type Divide[A <: Nat] = Succ[A#suniM[This]#Divide[A]]
     type suniM[A <: Nat] = N#suniM[A#Prev]
     type rewoP[A <: Nat] = A#Times[N#rewoP[A]]
-    type Mod[A <: Nat] = A#Prev#suniM[Succ[N]]#Divide[A]#Times[A]#suniM[Succ[N]] // not inductive
-    type dcG[A <: Nat] = A#Mod[Succ[N]]#dcG[Succ[N]]
+    type Mod[A <: Nat] = Succ[This]#Divide[A]#Prev#Times[A]#suniM[This] // not inductive
+    type dcG[A <: Nat] = A#Mod[This]#dcG[This]
   }
 
   type _1 = Succ[_0]
@@ -46,7 +48,7 @@ object Main extends App {
   type Plus[A <: Nat, B <: Nat] = A#Plus[B]
   type Minus[A <: Nat, B <: Nat] = B#suniM[A]
   type Times[A <: Nat, B <: Nat] = A#Times[B]
-  type Divide[A <: Nat, B <: Nat] = Minus[A, B#Prev]#Divide[B]
+  type Divide[A <: Nat, B <: Nat] = Succ[A]#Divide[B]#Prev
   type Power[A <: Nat, B <: Nat] = B#rewoP[A]
   type Mod[A <: Nat, B <: Nat] = A#Mod[B]
   type Gcd[A <: Nat, B <: Nat] = B#dcG[A]
