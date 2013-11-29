@@ -31,4 +31,9 @@ Examples of what can be proven by the compiler:
   type _11a = _3 ^ _4 + _7 / _8
   type _11b = Gcd[_6, _2] x _9 % _5 x _4 - _1
   implicitly[_11a =:= _11b]
+
+  // check primality
+  implicitly[Prime[_3]]
+  implicitly[Prime[_2 + _9]]
+  implicitly[Prime[_2 ^ _5 - _1]]
 ```

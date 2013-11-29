@@ -69,4 +69,21 @@ object Main extends App {
   type _11a = _3 ^ _4 + _7 / _8
   type _11b = Gcd[_6, _2] x _9 % _5 x _4 - _1
   implicitly[_11a =:= _11b]
+
+  trait Prime[N <: Nat]
+  object Prime {
+    trait GcdChain[A <: Nat, B <: Nat]
+    implicit def gcdChain1[A <: Nat] = new GcdChain[A, _1]{}
+    implicit def gcdChain2[A <: Nat, B <: Nat]
+      (implicit ev1: Gcd[A, B] =:= _1, ev2: GcdChain[A, B#Prev]) = new GcdChain[A, B]{}
+    implicit def prime[N <: Nat](implicit ev: GcdChain[N, N#Prev]) = new Prime[N]{}
+  }
+
+  import Prime._
+  implicitly[Prime[_2]]
+  implicitly[Prime[_3]]
+  implicitly[Prime[_5]]
+  implicitly[Prime[_7]]
+  implicitly[Prime[_9 + _2]]
+  implicitly[Prime[_2 ^ _5 - _1]]
 }
